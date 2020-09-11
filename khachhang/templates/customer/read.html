@@ -1,0 +1,57 @@
+{% load widget_tweaks %}
+
+<div class="modal-header">
+  <h3 class="modal-title">Chi tiết</h3>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+
+  <div class="">
+    Ngày tạo:
+    {{ customer.create_date|date:"f j/m/y" }}
+  </div>
+
+  <div class="">
+    Khách hàng:
+    {{ customer.name}}
+  </div>
+
+  <div class="">
+    <br><b>Thông tin chung:</b>
+    {{ customer.popular_info  |linebreaks}}
+  </div>
+
+  <div class="">
+    <br><b>Thông tin riêng:</b>
+    {{ customer.private_info  |linebreaks}}
+  </div>
+
+  <div class="">
+    Loại KH:
+    {{ customer.customer_type}}
+  </div>
+
+  <div class="">
+    Tình trạng:
+    {{ customer.status }}
+  </div>
+
+  <div class="">
+    Tổng tiền:
+    {{ customer.total_order_per_customer }}
+  </div>
+
+  <div class="">
+    Còn phải thu:
+    {{ customer.qty_order_per_customer_unpaid }}
+  </div>
+
+  
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>

@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block stylesheets %}
+<!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+      <!-- Font awesome CSS -->
+      <link rel="stylesheet" href="{% static 'assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+      <!-- css for sidebar -->
+      <link rel="stylesheet" href="{% static 'css/simple-sidebar.css' %}">
+      <link rel="stylesheet" href="{% static 'css/simple-content.css' %}">
+      <!-- css for sidebar content -->
+      
+      <!-- Custom CSS -->
+      <style media="screen">
+
+      </style>
+{% endblock stylesheets %}
+
+
+{% block content %}
+{% include "_modal.html" %}
+
+ <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+            <div class="bg-light border-right" id="sidebar-wrapper">
+              <div class="sidebar-heading">Bảng tổng hợp </div>
+              <div class="list-group list-group-flush">
+                <a href="?keyword={{day}}.{{month}}.{{year}}" class="list-group-item list-group-item-action bg-light">Hôm nay</a>
+                <a href="?keyword={{day|add:-1}}.{{month}}.{{year}}" class="list-group-item list-group-item-action bg-light">Hôm qua</a>
+                <a href="?keyword={{month}}.{{year}}" class="list-group-item list-group-item-action bg-light">Tháng này</a>
+                <a href="?keyword={{month|add:-1}}.{{year}}" class="list-group-item list-group-item-action bg-light">Tháng trước</a>
+                <a href="?keyword={{year}}" class="list-group-item list-group-item-action bg-light">Năm {{year}}</a>
+                <a href="#" class="list-group-item list-group-item-action bg-light">Thống kê</a>
+              </div>
+
+                        <!-- Navbar -->
+                        <nav class = "navbar">
+
+                        </nav>
+
+            </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+
+                                    {% comment %} Nhóm Button {% endcomment %}
+                                                <button class="btn btn-primary" id="menu-toggle">Menu</button>
+                                                
+                                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                                  <span class="navbar-toggler-icon"></span>
+                                                </button>
+
+                                                <button style="margin:0 0 0 2px;" type="button" class="bs-modal btn btn-primary"  data-form-url="{% url 'create-receipt' customer.pk %}">
+                                                  <span class="fa fa-plus mr-2"></span>Tạo phiếu thu
+                                                </button>
+                                    {% comment %} Hết Button {% endcomment %}
+
+          </nav>
+
+{% comment %} Nơi chứa nội dung chi tiết {% endcomment %}
+      <div class="container-fluid">
+
+            {% include "receipt/_header_table.html" %}
+
+        <main>
+                      <hr>
+                        <div id="project2" class="clearfix">
+                          {{customer.popular_info | linebreaks}}
+                        </div>
+
+
+
+
+                        <div id="company" class="clearfix">
+                          <div>Tổng tiền: {{total_customer_list_receipts}}</div>
+                          <div>Xác nhận thực hiện</div>
+                          <div>Thanh toán</div>
+                        </div>
+
+              {% include "receipt/_detail_table.html" %}
+        </main>
+
+
+
+            </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+{% comment %} Sử dụng để chạy sidebar {% endcomment %}
+<!-- Bootstrap core JavaScript (Test)-->
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- Menu Toggle Script -->
+
+{% endblock content %}
+
+
+{% block extrascripts %}
+
+              <script type="text/javascript">
+                  $("#menu-toggle").click(function(e) {
+                    e.preventDefault();
+                    $("#wrapper").toggleClass("toggled");
+                  });            
+                  $(function () {
+                    $("#create-receipt").modalForm({
+                      formURL: "{% url 'create-receipt' customer.pk %}",
+                      modalID: "#create-modal"
+                    });
+                    $(".bs-modal").each(function () {
+                        $(this).modalForm({formURL: $(this).data("form-url")});
+                    });  
+                  });      
+              </script>
+              
+{% endblock extrascripts %}

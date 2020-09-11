@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{%block navbar %}
+    {% with page=2 %}
+        {{block.super}}
+    {% endwith %}
+{%endblock navbar %}
+
+
+{% block content %}
+<div class="d-flex" id="wrapper">
+
+    <!-- Sidebar {{time|date:"f j/m/y"}} -->
+            <div class="bg-light border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading">Bảng tổng hợp </div>
+            <div class="list-group list-group-flush">
+                <a href="?keyword={{day}}.{{month}}.{{year}}" style="padding: .2rem 1.25rem;" class="list-group-item list-group-item-action bg-light">Hôm nay</a>
+                <a href="?keyword={{day|add:-1}}.{{month}}.{{year}}" style="padding: .2rem 1.25rem;"  class="list-group-item list-group-item-action bg-light">Hôm qua</a>
+                <a href="?keyword={{month}}.{{year}}" style="padding: .2rem 1.25rem;"  class="list-group-item list-group-item-action bg-light">Tháng này</a>
+                <a href="?keyword={{month|add:-1}}.{{year}}" style="padding: .2rem 1.25rem;"  class="list-group-item list-group-item-action bg-light">Tháng trước</a>
+                <a href="?keyword={{year}}" style="padding: .2rem 1.25rem;"  class="list-group-item list-group-item-action bg-light">Năm {{year}}</a>
+
+                        <div class="sidebar-heading pt-3">Thống kê </div>
+                        <div class="ml-3 m-1">
+                                Ko XN: <b class="text-danger">{{tongtien_oxacnhan}}</b><br>
+                                <br>
+                                Tổng đơn: {{ tongso }} <br>
+                                Đơn đã TT: {{tongso_dh_thanhtoan }}<br>
+                                ĐH chưa TT: {{tongso_dh_othanhtoan }}<br>
+                                <br>
+                                Đơn đã xác nhận: {{ tongso_dh_xacnhan }}<br>
+                                ĐH ko xác nhận: {{ tongso_dh_oxacnhan }}<br>
+                                ĐH chưa trả: {{ tongso_dh_otra}}<br>
+                                Đơn đã trả: {{ tongso_dh_datra}}<br>
+                                <br>
+                                
+            </div>
+            </div>
+
+                        <!-- Navbar -->
+                        <nav class = "navbar">
+
+                        </nav>
+
+            </div>
+    <!-- /#sidebar-wrapper -->
+
+<div id="page-content-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+
+          {% comment %} Nhóm Button {% endcomment %}
+                        <div class="col-12">
+                          <button class="btn btn-primary" id="menu-toggle">Menu</button>
+                          
+                          <button id="create-receipts" class="btn btn-primary" type="button" name="button">
+                            <span class="fa fa-plus mr-2"></span>Tạo phiếu thu
+                          </button>
+
+                          <a href="{% url 'sent-receipt' %}" class="btn btn-success">
+                            <span class="fa fa-paper-plane mr-2"></span>Duyệt thu
+                          </a>
+{% comment %} 
+                          <button id="filter-book" class="bs-modal btn btn-primary" type="button" name="button" data-form-url="{% url 'filter' %}">
+                            <span class="fa fa-filter mr-2"></span>Phân loại
+                          </button> {% endcomment %}
+                          
+                        </div>
+            {% comment %} Hết Button {% endcomment %}
+
+        </nav>
+
+      {% include "_modal.html" %}
+      <div class="container-fluid mt-3">
+          <div class="row">
+              <div class="col">
+                <div class="row pt-3">
+
+
+                      <div class="col-12 mb-3">
+                        {% include "receipt/_manager_table.html" %}
+                        {% if receipts %}
+                          {% include "receipt/_all_table.html" %}
+                        {% else %}
+                          <p class="no-books text-primary">Không có thông tin được tìm thấy</p>
+                        {% endif %}
+                      </div>
+
+
+                      
+                </div>
+              </div>
+          </div>
+      </div>
+{% endblock content %}
+
+{% block extrascripts %}
+  <script type="text/javascript">
+      $(function () {
+          // Log in & Sign up buttons
+          // The formURL is given explicitly
+          $("#login-btn").modalForm({
+            formURL: "{% url 'login' %}"
+          });
+
+          $("#signup-btn").modalForm({
+            formURL: "{% url 'signup' %}"
+          });
+
+          // Create book button opens modal with id="create-modal"
+          $("#create-receipts").modalForm({
+            formURL: "{% url 'create-receipts' %}",
+            modalID: "#create-modal"
+          });
+
+          var asyncSuccessMessage = [
+            "<div ",
+            "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+            "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+            "Success: Updated.",
+            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+            "<span aria-hidden='true'>&times;</span>",
+            "</button>",
+            "</div>",
+            "<script>",
+            "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+            "<\/script>"
+          ].join("");
+
+          function updateModalForm() {
+            $(".update-all").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url"),
+                asyncUpdate: true,
+                asyncSettings: {
+                  closeOnSubmit: false,
+                  successMessage: asyncSuccessMessage,
+                  dataUrl: "receipts/",
+                  dataElementId: "#all-table",
+                  dataKey: "table",
+                  addModalFormFunction: updateModalForm
+                }
+              });
+            });
+          }
+          updateModalForm();
+
+
+          // Read and Delete book buttons open modal with id="modal"
+          // The formURL is retrieved from the data of the element
+          $(".bs-modal").each(function () {
+              $(this).modalForm({formURL: $(this).data("form-url")});
+          });
+
+          // Hide message
+          $(".alert").fadeTo(2000, 500).slideUp(500, function () {
+              $(".alert").slideUp(500);
+          });
+      });
+
+$(document).ready(function(){
+  $('.link_tip').tooltip({html: true, placement: "right"}); 
+});
+
+
+$("#menu-toggle").click(function(e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+});           
+  </script>
+
+{% endblock extrascripts %}

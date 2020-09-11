@@ -1,0 +1,50 @@
+<table>
+    <thead>
+                    <tr>
+                    <th style="width:2%" class="service text-center">#</th>
+                    <th style="width:48%" class="desc">Tên phiếu thu</th>
+                    <th style="width:25%">Đã thu</th>
+                    <th style="width:25%" >Tổng tiền</th>
+                    </tr>
+    </thead>
+
+    <tbody>
+            {%if receipts %}
+                {% for receipt in receipts %}
+                    <tr>
+                    <td class="service text-center">{{ forloop.counter }}</td>
+                    <td class="desc">{{receipt.search_date}} | {{receipt.customer.name}} - {{receipt.name}}</td>
+                    <td class="unit">{{receipt.deposit}}</td>
+                    <td class="unit">{{receipt.deposit}}</td>
+                    </tr>
+                {% endfor %}
+                    <tr>
+                    <td colspan="3">TỔNG</td>
+                    <td class="total">{{total_customer_list_receipts}}</td>
+                    </tr>
+        {% else %}
+        <tr><td class = "text-center" colspan="4">Không có phiếu thu nào</td></tr>
+        {% endif %}
+    </tbody>
+</table>
+
+
+<div class="container-fluid" style="padding-top:15%; ">
+    <div class="row">
+        <div class="col-md-8">
+        <b>THÔNG TIN CHUYỂN KHOẢN</b> <br>
+        Bank account  0011 0043 164 77   Vietcombank    -     Hanoi Branch <br>
+        Bank account : 0011002211117 Vietcombank- Chuong Duong Branch<br>
+        Bank account : 100006429077   Vietinbank -  Chuong Duong Branch<br>
+        Bank account : 19030642985016  Techcombank - An Duong Branch<br>
+        Bank account : 020042213481      Sacombank  -  Hanoi Branch<br>
+        </div>
+        <div class="col-md-4 text-center">
+        <b>Tiếp nhận</b>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+    </div>
+    <div class="col-md-6"></div>
+</div>

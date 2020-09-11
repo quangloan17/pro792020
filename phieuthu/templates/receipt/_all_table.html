@@ -1,0 +1,73 @@
+<div class="table-responsive">
+<table id="all-table" class="table table-sm table-bordered table-striped table-hover">
+  <thead >
+  <tr>
+    <th style="width:2%;" class="text-center" scope="col">#</th>
+    <th style="width:20%;" class="text-center" scope="col">Tên phiếu thu</th>
+    <th style="width:10%;"  class="text-center no-print" scope="col">Tình trạng</th>
+    <th style="width:5%;"  class="text-center" scope="col">Đã thu</th>
+    <th style="width:5%;"  class="text-center" scope="col">Phải thu</th>
+    <th style="width:5%;"  class="text-center" scope="col">Tổng tiền</th>
+    <th style="width:10%;"  class="text-center no-print" scope="col">Đọc / Cập nhật / Xóa</th>
+  </tr>
+  </thead>
+  <tbody>
+        {% for receipt in receipts reversed %}
+              <tr>
+                <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                <td><a class="link_tip" href = "{% url 'orders-detail-list' receipt.pk %}" data-toggle="tooltip" title="{{ receipt.popular_info|linebreaks }}"> {{ receipt.search_date}} | {{ receipt.customer.name}} - {{ receipt.name }}</a></td>
+                {% comment %} Tình trạng {% endcomment %}
+                <td class="text-center no-print">
+                {% if receipt.status == False %}<a class="btn btn-sm btn-warning"  href ="{% url 'confirm_receipt' receipt.pk %}"><span class="fa fa-check-square-o"></span></a>
+                {% elif receipt.status == True %}<a class="btn btn-sm btn-primary"  href ="{% url 'confirm_receipt' receipt.pk %}"><span class="fa fa-check-square-o"></span></a>
+                {% endif %}  
+                {% if receipt.payment_status == False %}<a class="btn btn-sm btn-warning"  href ="{% url 'paid_receipt' receipt.pk %}"><span class="fa fa-money"></span></a>
+                {% elif receipt.payment_status == True %}<a class="btn btn-sm btn-primary"  href ="{% url 'paid_receipt' receipt.pk %}"><span class="fa fa-money"></span></a> 
+                {% endif %}  
+                {% if receipt.send_status == False %}<a class="btn btn-sm btn-warning"  href ="{% url 'send_receipt' receipt.pk %}"><span class="fa fa-motorcycle"></span></a>
+                {% elif receipt.send_status == True %}<a class="btn btn-sm btn-primary"  href ="{% url 'send_receipt' receipt.pk %}"><span class="fa fa-motorcycle"></span></a> 
+                {% endif %}
+
+                {% comment %} Xác nhận thanh toán {% endcomment %}
+                {% if receipt.approved_status == False and user.username != 'loan' %}
+                <a class="btn btn-sm btn-secondary">
+                    <span class="fa fa-lock"></span>
+                </a>
+                {% endif %}
+                {% if receipt.approved_status == False and user.username == 'loan' %}<a class="btn btn-sm btn-warning"  href ="{% url 'approved_receipt' receipt.pk %}"><span class="fa fa-usd"></span></a>
+                {% elif receipt.approved_status == True %}<a class="btn btn-sm btn-success"><span class="fa fa-usd"></span></a> 
+                {% endif %}
+                {% comment %} Xác nhận thanh toán {% endcomment %}
+                
+                </td>
+                {% comment %} Tình trạng {% endcomment %}
+                <td class="text-center">{{ receipt.deposit }}</td>
+                <td class="text-center">{{ receipt.phaithu }}</td>
+                <td class="text-center">{{ receipt.tongtien_order }}</td>
+
+                
+                <td class="text-center no-print">
+                  <!-- Read book buttons -->
+                  <button type="button" class="bs-modal read-book btn btn-sm btn-primary" data-form-url="{% url 'read-receipt' receipt.pk %}">
+                    <span class="fa fa-eye"></span>
+                  </button>
+                  <!-- Update book buttons -->
+                  {% if receipt.payment_status == True and receipt.approved_status == True %}
+
+                  
+                  {% else %}
+                  <button type="button" class="update-all btn btn-sm btn-primary" data-form-url="{% url 'update-receipt' receipt.pk %}">
+                    <span class="fa fa-pencil"></span>
+                  </button>
+                  <button type="button" class="bs-modal delete-book btn btn-sm btn-danger" data-form-url="{% url 'delete-receipt' receipt.pk %}">
+                    <span class="fa fa-trash"></span>
+                  </button>
+                  {% endif %}
+                </td>
+              </tr>
+        {% endfor %}
+  </tbody>
+</table>
+
+
+</div>

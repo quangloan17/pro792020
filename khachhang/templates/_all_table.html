@@ -1,0 +1,81 @@
+<div class="table-responsive">
+<table id="all-table" class="table table-bordered table-striped table-hover">
+  <thead >
+  <tr>
+    <th style="width:2%;" class="text-center" scope="col">#</th>
+    <th style="width:10%;"  class="text-center" scope="col"><a href = "{% url 'customer-date' %}">Tên KH</a></th>
+    <th style="width:5%;"  class="text-center" scope="col"><a href = "{% url 'customer-type' %}">Phân Loại</a></th>
+    <th style="width:5%;"  class="text-center no-print" scope="col">Tình trạng</th>
+    <th style="width:10%;"  class="text-center" scope="col"><a href = "{% url 'index-max-total' %}">Tổng tiền</a></th>
+    <th style="width:10%;"  class="text-center" scope="col">Tiền chưa thanh toán</th>
+    <th style="width:10%;"  class="text-center no-print" scope="col">Đọc / Cập nhật / Xóa</th>
+  </tr>
+  </thead>
+  <tbody>
+        {% for customer in customers %}
+              <tr>
+                <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                <td>{{ customer.search_date }} | <a class="link_tip" href = "{% url 'receipts-detail-list' customer.id %}" data-toggle="tooltip" title="<b>Thông tin chung:</b> {{customer.popular_info |linebreaks}}<b>Thông tin riêng:</b> {{ customer.private_info|linebreaks }}"> {{ customer.name }}</a></td>
+                <td class="text-center">{{ customer.customer_type }}</td>
+                    {% if not customer.status %}
+                      <td class="text-center no-print">
+                      <a href = "{% url 'customer-done' customer.id %}" class="bs-modal read-book btn btn-sm btn-secondary">
+                      <span class="fa fa-thumbs-up"></span>
+                      </a>
+                      </td>
+                    {% else %}
+                      <td class="text-center no-print">
+                      <a href="" class="bs-modal read-book btn btn-sm btn-primary">
+                      <span class="fa fa-thumbs-up"></span>
+                      </a>
+                      </td>
+                    {% endif %}
+                <td class="text-center">{{ customer.tongtien_receipt }}</td>
+                <td class="text-center">{{ customer.tongtien_receipt_unpaid}}</td>
+
+                <td class="text-center no-print">
+                  <!-- Read book buttons -->
+                  <button type="button" class="bs-modal read-book btn btn-sm btn-primary" data-form-url="{% url 'read' customer.pk %}">
+                    <span class="fa fa-eye"></span>
+                  </button>
+                  <!-- Update book buttons -->
+                  <button type="button" class="update-all btn btn-sm btn-primary" data-form-url="{% url 'update' customer.pk %}">
+                    <span class="fa fa-pencil"></span>
+                  </button>
+                  <!-- Delete book buttons -->
+                  {% if customer.status %}
+                  {% else %}
+                  <button type="button" class="bs-modal delete-book btn btn-sm btn-danger" data-form-url="{% url 'delete' customer.pk %}">
+                    <span class="fa fa-trash"></span>
+                  </button>
+                  {% endif %}
+                </td>
+              </tr>
+        {% endfor %}
+  </tbody>
+</table>
+
+
+                  {% if is_paginated %}
+                        <ul class="pagination justify-content-center">
+                          {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                          {% else %}
+                            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                          {% endif %}
+                          {% for i in paginator.page_range %}
+                            {% if page_obj.number == i %}
+                              <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                              <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                          {% endfor %}
+                          {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                          {% else %}
+                            <li class="page-item" class="disabled"><span class="page-link">&raquo;</span></li>
+                          {% endif %}
+                        </ul>
+                  {% endif %}
+
+</div>

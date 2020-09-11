@@ -1,0 +1,57 @@
+{% load widget_tweaks %}
+<div class="modal-header">
+    <h3 class="modal-title">Chi tiết</h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+
+    <div class="">
+        Ngày tạo:
+        {{ receipt.create_date|date:"f j/m/y" }}
+    </div>
+
+    <div class="">
+        Phiếu thu:
+        {{ receipt.name}}
+    </div>
+
+    <div class="">
+        <br><b>Thông tin chung:</b>
+        {{ receipt.popular_info  |linebreaks}}
+    </div>
+
+
+    <div class="">
+        Số lượng đơn:
+        {{ receipt.}}
+    </div>
+
+    <div class="">
+        Tình trạng:
+        {{ receipt.status }}
+    </div>
+
+    <div class="">
+        Đã thu:
+        {{ receipt.deposit }}
+    </div>
+
+    <div class="">
+        Còn phải thu:
+        {{ customer.qty_receipt_per_customer_unpaid }}
+    </div>
+
+    <div class="">
+        Tổng tiền:
+        {{ customer.qty_receipt_per_customer_unpaid }}
+    </div>
+
+  
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>

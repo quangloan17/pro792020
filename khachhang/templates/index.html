@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{%block navbar %}
+    {% with page=1 %}
+        {{block.super}}
+    {% endwith %}
+{%endblock navbar %}
+
+
+{% block content %}
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-light border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading">Bảng tổng hợp</div>
+            <div class="list-group list-group-flush">
+                <a href="?keyword={{day}}.{{month}}.{{year}}" style="padding: .2rem 1.25rem;" class="list-group-item list-group-item-action bg-light">Hôm nay</a>
+                <a href="?keyword={{day|add:-1}}.{{month}}.{{year}}" style="padding: .2rem 1.25rem;"  class="list-group-item list-group-item-action bg-light">Hôm qua</a>
+                <a href="?keyword={{month}}.{{year}}" style="padding: .2rem 1.25rem;"  class="list-group-item list-group-item-action bg-light">Tháng này</a>
+                <a href="?keyword={{month|add:-1}}.{{year}}" style="padding: .2rem 1.25rem;"  class="list-group-item list-group-item-action bg-light">Tháng trước</a>
+                <a href="?keyword={{year}}" style="padding: .2rem 1.25rem;"  class="list-group-item list-group-item-action bg-light">Năm {{year}}</a>
+
+            <div class="sidebar-heading pt-3">Thống kê </div>
+            <div class="ml-3 m-1">
+                    Tổng số: {{ tongso }}
+                    <br>
+                    <br>
+                    Miền Bắc: {{customer_north}} - <mark class ="text-primary">{{customer_north_total}}</mark>
+                    <br>Miền Nam: {{customer_south}} - <mark class ="text-primary">{{customer_south_total}}</mark>
+                    <br> Miền Trung: {{customer_central}} - <mark class ="text-primary">{{customer_central_total}}</mark>
+                    <br> Khác: {{customer_other}} - <mark class ="text-primary">{{customer_other_total}}</mark>
+                    <br>
+                    <br>
+                    Khách lẻ: {{customer_kle}} - <mark class ="text-primary">{{customer_kle_total}}</mark>
+                    <br>Khách tháng: {{customer_kthang}} - <mark class ="text-primary">{{customer_kthang_total}}</mark>
+                    <br>Khách IDT: {{customer_idt}} - <mark class ="text-primary">{{customer_idt_total}}</mark>
+                    <br>Khách khác: {{customer_khac}} - <mark class ="text-primary">{{customer_khac_total}}</mark>
+                    <br>
+                    <br>
+            </div>
+        </div>
+        
+        <!-- Navbar -->
+        <nav class = "navbar">
+
+        </nav>
+    </div>
+
+
+    <!-- /#sidebar-wrapper -->
+    <div id="page-content-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            {% comment %} Nhóm Button {% endcomment %}             
+            <div class="col-12">
+                <button class="btn btn-primary" id="menu-toggle">Menu</button>
+                <button id="create-customer" class="btn btn-primary" type="button" name="button">
+                    <span class="fa fa-plus mr-2"></span>Tạo Khách hàng
+                </button>
+
+                <a href="{% url 'customer-debt' %}" class="btn btn-danger">
+                    <span class="fa fa-heartbeat mr-2"></span>Khách nợ
+                </a>
+
+                <button id="filter-book" class="bs-modal btn btn-primary" type="button" name="button" data-form-url="{% url 'filter' %}">
+                    <span class="fa fa-filter mr-2"></span>Phân loại
+                </button>
+            </div>
+            {% comment %} Hết Button {% endcomment %}
+        </nav>
+
+
+        <!-- /#Modal và manager -->
+        {% include "_modal.html" %}
+            <div class="container-fluid mt-3">
+                <div class="row">
+                    <div class="col">
+                        <div class="row pt-3">
+                            <div class="col-12 mb-3">
+                                {% include "customer/_manager_table.html" %}
+                                {% if customers %}
+                                    {% include "_all_table.html" %}
+                                {% else %}
+                                    <p class="no-books text-primary">Không có thông tin được tìm thấy</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        
+{% endblock content %}
+
+{% block extrascripts %}
+    <script type="text/javascript">
+        $(function () {
+                // Create book button opens modal with id="create-modal"
+                $("#create-customer").modalForm({
+                    formURL: "{% url 'create' %}",
+                    modalID: "#create-modal"
+                });
+
+            var asyncSuccessMessage = [
+            "<div ",
+            "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+            "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+            "Success: Updated.",
+            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+            "<span aria-hidden='true'>&times;</span>",
+            "</button>",
+            "</div>",
+            "<script>",
+            "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+            "<\/script>"
+            ].join("");
+
+            function updateModalForm() {
+            $(".update-all").each(function () {
+                $(this).modalForm({
+                formURL: $(this).data("form-url"),
+                asyncUpdate: true,
+                asyncSettings: {
+                    closeOnSubmit: false,
+                    successMessage: asyncSuccessMessage,
+                    dataUrl: "customer/",
+                    dataElementId: "#all-table",
+                    dataKey: "table",
+                    addModalFormFunction: updateModalForm
+                }
+                });
+            });
+            }
+            updateModalForm();
+
+
+            // Read and Delete book buttons open modal with id="modal"
+            // The formURL is retrieved from the data of the element
+            $(".bs-modal").each(function () {
+                $(this).modalForm({formURL: $(this).data("form-url")});
+            });
+
+            // Hide message
+            $(".alert").fadeTo(2000, 500).slideUp(500, function () {
+                $(".alert").slideUp(500);
+            });
+        });
+
+        $(document).ready(function(){
+        $('.link_tip').tooltip({html: true, placement: "right"}); 
+        });
+
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });           
+
+    </script>
+{% endblock extrascripts %}

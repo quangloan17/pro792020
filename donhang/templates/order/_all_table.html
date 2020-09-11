@@ -1,0 +1,51 @@
+<div class="table-responsive">
+<table id="all-table" class="table table-sm table-bordered table-striped table-hover">
+  <thead >
+  <tr>
+    <th style="width:2%;" class="text-center" scope="col">#</th>
+    <th style="width:10%;" class="text-center" scope="col">Ngày | Tên KH</th>
+    <th style="width:15%;"  class="text-center" scope="col">Tên ĐH</th>
+    <th style="width:15%;" class="text-center" scope="col">Loại đơn hàng</th>
+    <th style="width:5%;"  class="text-center" scope="col">Số lượng</th>
+    <th style="width:5%;"  class="text-center" scope="col">Giá</th>
+    <th style="width:10%;"  class="text-center" scope="col">Tổng tiền</th>
+    <th style="width:10%;"  class="text-center no-print" scope="col">Đọc/Sửa/Xóa</th>
+  </tr>
+  </thead>
+  <tbody>
+        {% for order in orders reversed %}
+              <tr>
+                <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                <td ><a class="" href = "" data-toggle="tooltip" title="{{ order.popular_info|linebreaks }}"> {{ order.search_date }} | {{ order.receipt.customer.name}}</a></td>
+                <td class="text-center">{{ order.name }}</td>
+                <td class="text-center">{{ order.order_type }} {{ order.language_type }}</td>
+                <td class="text-center">{{ order.quantity }} {{ order.unit }}</td>
+                <td class="text-center">{{ order.price }}</td>
+                <td class="text-center">{{ order.tongtien }}</td>
+
+
+                
+                <td class="text-center no-print">
+                  <!-- Read book buttons -->
+                  <button type="button" class="bs-modal read-book btn btn-sm btn-primary" data-form-url="{% url 'read-order' order.pk %}">
+                    <span class="fa fa-eye"></span>
+                  </button>
+                  <!-- Update book buttons -->
+                  <button type="button" class="update-all btn btn-sm btn-primary" data-form-url="{% url 'update-order' order.pk %}">
+                    <span class="fa fa-pencil"></span>
+                  </button>
+                  <!-- Delete book buttons -->
+                  {% if order.status %}
+                  {% else %}
+                  <button type="button" class="bs-modal delete-book btn btn-sm btn-danger" data-form-url="{% url 'delete-order' order.pk %}">
+                    <span class="fa fa-trash"></span>
+                  </button>
+                  {% endif %}
+                </td>
+              </tr>
+        {% endfor %}
+  </tbody>
+</table>
+
+
+</div>

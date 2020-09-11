@@ -1,0 +1,56 @@
+<table>
+    <thead>
+                    <tr>
+                    <th style="width:2%" class="service text-center">#</th>
+                    <th style="width:10%" class="desc">Ngày</th>
+                    <th style="width:15%" class="desc">Loại</th>
+                    <th style="width:25%" class="desc">Tên tài liệu/ Dịch vụ</th>
+                    <th style="width:10%" >Số lượng</th>
+                    <th style="width:10%" >Đơn giá</th>
+                    <th style="width:10%" >Tổng tiền</th>
+                    </tr>
+    </thead>
+
+    <tbody>
+            {%if orders %}
+                {% for order in orders %}
+                    <tr>
+                    <td class="service text-center">{{ forloop.counter }}</td>
+                    <td class="desc">{{order.search_date}}  </td>
+                    <td class="desc">{{order.order_type}} {{order.language_type}} </td>
+                    <td class="desc">{{ order.name }}</td>
+                    <td class="unit">{{ order.quantity }} {{ order.unit }}</td>
+                    <td class="qty">{{ order.price }}</td>
+                    <td class="total">{{ order.tongtien }}</td>
+                    </tr>
+                {% endfor %}
+                    <tr>
+                    <td colspan="6">TỔNG</td>
+                    <td class="total">{{orders_amount}}</td>
+                    </tr>
+        {% else %}
+        <tr><td class = "text-center" colspan="6">Không có đơn hàng nào</td></tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<div class="container-fluid" style="padding-top:15%; ">
+    <div class="row">
+        <div class="col-md-8">
+        <b>THÔNG TIN CHUYỂN KHOẢN</b> <br>
+        Bank account  0011 0043 164 77   Vietcombank    -     Hanoi Branch <br>
+        Bank account : 0011002211117 Vietcombank- Chuong Duong Branch<br>
+        Bank account : 100006429077   Vietinbank -  Chuong Duong Branch<br>
+        Bank account : 19030642985016  Techcombank - An Duong Branch<br>
+        Bank account : 020042213481      Sacombank  -  Hanoi Branch<br>
+        </div>
+        <div class="col-md-4 text-center">
+        <b>Tiếp nhận</b>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+    </div>
+    <div class="col-md-6"></div>
+</div>
+
